@@ -7,18 +7,21 @@ import(
 )
 
 type Receipt struct{
-	retailer string
-	purchaseDateTime time.Time
-	total float64
-	items []ItemReceipt
+	Retailer string
+	PurchaseDateTime time.Time
+	Total float64
+	Items []ItemReceipt
 }
 
 type ItemReceipt struct{
-	shortDescription string
-	price float64
+	ShortDescription string
+	Price float64
 }
 
 type DatabaseInterface interface{
+	// FindReceipt(receiptId string) *Receipt
+	FindReceipt(receiptId string) (Receipt, error)
+	CreateReceipt(receiptData Receipt) (string, error)
 	SetupDatabase() error
 }
 

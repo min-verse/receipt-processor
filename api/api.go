@@ -7,7 +7,7 @@ import(
 
 type ReceiptRequest struct{
 	Retailer string `json:"retailer"`
-	Total string `json:"total"`
+	Total float64 `json:"total,string"`
 	PurchaseDate string `json:"purchaseDate"`
 	PurchaseTime string `json:"purchaseTime"`
 	ItemReceipts []ItemRequest `json:"items"`
@@ -15,7 +15,7 @@ type ReceiptRequest struct{
 
 type ItemRequest struct{
 	ShortDescription string `json:"shortDescription"`
-	Price string `json:"price"`
+	Price float64 `json:"price,string"`
 }
 
 // Error Response
