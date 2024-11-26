@@ -5,6 +5,19 @@ import(
 	"net/http"
 )
 
+type ReceiptRequest struct{
+	Retailer string `json:"retailer"`
+	Total string `json:"total"`
+	PurchaseDate string `json:"purchaseDate"`
+	PurchaseTime string `json:"purchaseTime"`
+	ItemReceipts []ItemRequest `json:"items"`
+}
+
+type ItemRequest struct{
+	ShortDescription string `json:"shortDescription"`
+	Price string `json:"price"`
+}
+
 // Error Response
 type Error struct{
 	// Error Code

@@ -20,6 +20,16 @@ func (db *receiptsDB) FindReceipt(receiptId string) *Receipt {
 	return &receiptData
 }
 
+func (db *receiptsDB) CreateReceipt(receiptId string, receiptData Receipt) string{
+	receipts[receiptId] = receiptData
+	var savedReceiptData, ok = receipts[receiptId]
+	if !ok {
+		return "000"
+	}
+
+	return receiptId
+}
+
 func (db *receiptsDB) SetupDatabase() error {
 	return nil
 }
