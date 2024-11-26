@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"github.com/min-verse/receipt-processor/api"
-	"github.com/min-verse/receipt-processor/internal/tools"
+	// "github.com/min-verse/receipt-processor/internal/tools"
 	log "github.com/sirupsen/logrus"
 	"github.com/gorilla/schema"
 )

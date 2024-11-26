@@ -4,7 +4,7 @@ import(
 	"github.com/go-chi/chi"
 	chimiddle "github.com/go-chi/chi/middleware"
 	// Imports middleware package
-	"github.com/min-verse/receipt-processor/internal/middleware"
+	// "github.com/min-verse/receipt-processor/internal/middleware"
 )
 
 func Handler(r *chi.Mux){
