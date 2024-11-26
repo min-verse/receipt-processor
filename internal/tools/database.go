@@ -5,7 +5,6 @@ import(
 	"math"
 	"strings"
 	"time"
-	"fmt"
 	log "github.com/sirupsen/logrus"
 )
 
