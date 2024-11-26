@@ -5,6 +5,8 @@ import(
 	"net/http"
 )
 
+// Quantifies the JSON Receipt Request Body when a client
+// attempts to create a new Receipt record in our "database"
 type ReceiptRequest struct{
 	Retailer string `json:"retailer"`
 	Total float64 `json:"total,string"`
@@ -13,6 +15,8 @@ type ReceiptRequest struct{
 	ItemReceipts []ItemRequest `json:"items"`
 }
 
+// Quantifies the nested "items" JSON Receipt Request Body 
+// when a client attempts to create a new Receipt record in our "database"
 type ItemRequest struct{
 	ShortDescription string `json:"shortDescription"`
 	Price float64 `json:"price,string"`
@@ -22,7 +26,6 @@ type ItemRequest struct{
 type Error struct{
 	// Error Code
 	Code int
-
 	// Error Message
 	Message string
 }
@@ -51,6 +54,7 @@ var(
 		writeError(w, err.Error(), http.StatusBadRequest)
 	}
 	// When the server internally runs into an error
+	// Hides unnecessary information from the end user
 	InternalErrorHandler = func(w http.ResponseWriter){
 		writeError(w, "An Unexpected Internal Error Occurred", http.StatusInternalServerError)
 	}

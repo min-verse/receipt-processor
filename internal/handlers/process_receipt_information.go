@@ -9,13 +9,18 @@ import (
 	"github.com/min-verse/receipt-processor/api"
 	"github.com/min-verse/receipt-processor/internal/tools"
 	log "github.com/sirupsen/logrus"
-	// "github.com/gorilla/schema"
 )
 
+// Custom error to inform the end user of missing fields when attempting
+// to create a Receipt Struct to add to our "database"
+
+// Soft enforcement of fields needed
 var MissingFieldsError = errors.New(`Missing necessary field(s) to create a Receipt record: retailer, purchaseDate, purchaseTime,
 and items where each item has a shortDescription and price, both as strings`)
 
 func ProcessReceiptInformation(w http.ResponseWriter, r *http.Request) {
+	// Initializes receiptPayload to represent request body
+	// Applying strong parameters
 	var receiptPayload api.ReceiptRequest
 	
 	decoder := json.NewDecoder(r.Body)
@@ -27,8 +32,8 @@ func ProcessReceiptInformation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var itemString string = fmt.Sprintf("%v is of type %T", receiptPayload.ItemReceipts[0].Price, receiptPayload.ItemReceipts[0].Price)
-
+	// Combining PurchaseDate and PurchaseTime to save as time.Time
+	// Down the line, we'll want to use this to parse the day and hour
 	combinedDateTime := fmt.Sprintf("%sT%s:00", receiptPayload.PurchaseDate, receiptPayload.PurchaseTime)
 	parsedTime, dateErr := time.Parse("2006-01-02T15:04:05", combinedDateTime)
 	if dateErr != nil {
@@ -36,6 +41,7 @@ func ProcessReceiptInformation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Constructs related slice of ItemReceipt Struct
 	var itemStructSlice []tools.ItemReceipt
 	for i := range receiptPayload.ItemReceipts{
 		currItem := receiptPayload.ItemReceipts[i]
@@ -43,9 +49,11 @@ func ProcessReceiptInformation(w http.ResponseWriter, r *http.Request) {
 		itemStructSlice = append(itemStructSlice, newItem)
 	}
 
+	// Instantiates a Receipt struct
 	var receiptInstance tools.Receipt = tools.Receipt{Retailer: receiptPayload.Retailer, PurchaseDateTime: parsedTime, Total: receiptPayload.Total, Items: itemStructSlice}
-	// var newReceiptId string = fmt.Sprintf("%d", rand.Intn(100)+10)
 
+	// Just like in CalculateReceiptPoints, simulates creating
+	// a "database" connection to eventually save a Receipt to
 	var database *tools.DatabaseInterface
 	database, databaseErr := tools.NewDatabase()
 	if databaseErr != nil {
@@ -53,22 +61,22 @@ func ProcessReceiptInformation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Saves the Receipt Struct to the "database" and also captures
+	// if there was an error. If there is an error, log it
 	savedReceiptId, saveErr := (*database).CreateReceipt(receiptInstance)
 	if saveErr != nil {
 		api.InternalErrorHandler(w)
 		return
 	}
 
+	// Send back a 201 Status Code along with the UUID of the newly-saved Receipt Struct
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	
-	// var response map[string]string = map[string]string{"success": fmt.Sprintf("%v are the items of type %T, and the date is %v converted to datetime as %v which is of type %T", receiptInstance.Items, receiptInstance.Items, combinedDateTime, receiptInstance.PurchaseDateTime, receiptInstance.PurchaseDateTime)}
+
+	// Structure of the JSON response back to the end user
 	var response map[string]string = map[string]string{"id": savedReceiptId}
 	var err = json.NewEncoder(w).Encode(response)
 	if err != nil{
 		return
 	}
-
-
-	// fmt.Sprintf("%+v", database)
 }

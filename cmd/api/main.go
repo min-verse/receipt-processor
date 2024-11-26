@@ -12,7 +12,9 @@ import(
 )
 
 func main(){
+	// Setting up Logging service
 	log.SetReportCaller(true)
+
 	// Setting up the router via chi
 	var r *chi.Mux = chi.NewRouter()
 
@@ -21,9 +23,11 @@ func main(){
 	// which adds the endpoint definitions
 	handlers.Handler(r)
 
+	// Start up message
 	fmt.Println("Starting Receipt Processor GO API Server...")
 
 	err := http.ListenAndServe(":8080", r)
+	// Logs any errors when server fails to start
 	if err != nil{
 		log.Error(err)
 	}
