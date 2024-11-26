@@ -1,15 +1,14 @@
-import tools
+package tools
 
 import(
 	"time"
-	"errors"
+	// "errors"
 	log "github.com/sirupsen/logrus"
 )
 
 type Receipt struct{
 	retailer string
-	purchaseDate time.Time
-	purchaseDate time.Time
+	purchaseDateTime time.Time
 	total float64
 	items []ItemReceipt
 }
