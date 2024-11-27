@@ -37,7 +37,6 @@ This API, built with Golang and Chi, allows a client to both:
       "shortDescription": "Product Name 2",
       "price": "19.99"
     }
-    ...
   ],
   "total": "119.98"
 }
@@ -60,6 +59,24 @@ This API, built with Golang and Chi, allows a client to both:
 I made a simulated "database" by creating a `DatabaseInterface` with shared methods to mock out an ORM (both retrieving and creating records in `receiptsDB` which is of the `DatabaseInterface`).
 
 Also a part of the simulated "database" is the `receiptsTable` which mocks a key-value store where the UUID is the key and an instance of the Receipt Struct is the value.
+
+```go
+// Receipt Struct
+// One Receipt "has many" ItemReceipts
+type Receipt struct{
+	Retailer string
+	PurchaseDateTime time.Time
+	Total float64
+	Items []ItemReceipt
+}
+
+// ItemReceipt Struct
+// ItemReceipt "belongs to" one Receipt
+type ItemReceipt struct{
+	ShortDescription string
+	Price float64
+}
+```
 
 I'm using Logrus as a structured logger for this application to log any errors.
 
